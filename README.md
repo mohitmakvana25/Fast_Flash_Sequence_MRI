@@ -1,240 +1,344 @@
-````markdown
-# Fastest FLASH MRI with Extended Trapezoid Gradient
+# ⚡ Fastest FLASH MRI with Extended Trapezoid Gradient
 
-**Developed by Mohit Makvana**  
-*Faculty of Engineering (Technische Fakultät)*  
-*August 2024*
-
-This project presents a highly optimised implementation of a **2D FLASH (Fast Low Angle Shot Imaging)** MRI sequence. By introducing an **Extended Trapezoid Gradient** along the frequency-encoding (Gx) axis, the sequence minimizes hardware dead-time between gradient transitions and significantly reduces total acquisition time.
+**Author:** Mohit Makvana  
+**Institution:** Technische Fakultät  
+**Date:** August 2024
 
 ---
 
-# 🚀 Performance Optimisation
+## Overview
 
-The conventional FLASH sequence contains inactive intervals between gradient switching events. By redesigning the readout gradient as a continuous extended trapezoid waveform, these delays are largely eliminated.
+This project presents a high-speed implementation of a **2D FLASH (Fast Low Angle Shot Imaging)** MRI sequence developed using Pulseq. The primary objective is to reduce total acquisition time by redesigning the frequency-encoding gradient waveform.
 
-## Acquisition Time Comparison
+Instead of using conventional trapezoidal gradients with idle switching periods, this implementation introduces an **Extended Trapezoid Gradient** along the readout axis. The modified waveform minimises gradient dead-time and improves overall sequence efficiency while remaining within scanner hardware constraints.
 
-| Sequence | Acquisition Time |
-|-----------|----------------|
-| Standard FLASH | ~0.80 s |
-| Optimized FLASH | ~0.175 s |
-
-This represents a reduction of more than **75% in total acquisition time** while maintaining image quality and sequence stability.
-
-<p align="center">
-  <img src="images/adc_signals_comparison.png" alt="ADC Signal Comparison" width="800">
-</p>
+The result is a significantly faster FLASH acquisition without sacrificing image quality or violating gradient and slew-rate limits.
 
 ---
 
-# 📖 Sequence Overview
+## Key Features
 
-FLASH (Fast Low Angle Shot Imaging) is a Gradient Recalled Echo (GRE) sequence that combines:
-
-- Low flip-angle RF excitation
-- Gradient echo signal formation
-- RF spoiling for steady-state stabilisation
-- Rapid image acquisition
-
-## Key Characteristics
-
-| Property | Description |
-|----------|-------------|
-| Acquisition Speed | Faster than RARE, slower than EPI |
-| Spatial Resolution | Higher than EPI-based methods |
-| SAR | Low |
-| SNR | Moderate |
-| Clinical Utility | Dynamic and angiographic imaging |
+- High-speed 2D FLASH sequence
+- Extended trapezoid frequency-encoding gradient
+- Reduced gradient switching dead-time
+- RF spoiling implementation
+- Hardware-constrained design
+- Pulseq compatible
+- Optimised acquisition time
+- Suitable for rapid dynamic imaging applications
 
 ---
 
-# 🎯 Contrast Weighting Options
+# Performance Improvement
 
-By adjusting sequence parameters, different tissue contrasts can be achieved.
+| Sequence Type | Acquisition Time |
+|--------------|-----------------|
+| Conventional FLASH | ~0.80 s |
+| Proposed Fast FLASH | ~0.175 s |
 
-## Proton Density (PD) Weighting
+### Speed Gain
 
-- Small flip angle
-- Long TR
-- Short TE
-
-## T1 Weighting
-
-- Large flip angle (~70°)
-- Short TR (< 50 ms)
-- Short TE
-
-## T2* Weighting
-
-- Small flip angle
-- Long TR (~100 ms)
-- Long TE (~20 ms)
+- Approximately **78% reduction** in acquisition time
+- More efficient gradient utilisation
+- Improved temporal resolution
 
 ---
 
-# 🏥 Clinical Applications
-
-### Magnetic Resonance Angiography (MRA)
-
-Non-invasive visualization of blood vessels.
-
-### Vascular Imaging
-
-Suitable for imaging:
-
-- Cerebral vasculature
-- Neck vessels
-- Peripheral arteries
-
-### Dynamic Contrast-Enhanced MRI (DCE-MRI)
-
-Used for monitoring contrast-agent uptake and washout over time.
-
-### Perfusion Assessment
-
-Evaluation of tissue perfusion before, during, and after contrast administration.
-
-### Abdominal Imaging
-
-Fast acquisition reduces motion artifacts and improves imaging efficiency in abdominal examinations.
-
----
-
-# ⚙️ Technical Specifications
-
-| Parameter | Value |
-|------------|------------|
-| Field of View (FOV) | 220 mm × 220 mm |
-| Slice Thickness | 8.0 mm |
-| Matrix Size | 32 × 32 |
-| Reconstructed Resolution | 64 × 64 |
-| Readout Samples | 64 |
-| Phase-Encoding Steps | 64 |
-| Flip Angle | 5° |
-| RF Spoiling Increment | 117° |
-| Maximum Gradient Strength | 28 mT/m |
-| Maximum Slew Rate | 150 T/m/s |
-
----
-
-# 🔬 Extended Trapezoid Gradient Concept
-
-The key innovation of this work is the replacement of conventional trapezoidal readout gradients with a continuous extended trapezoid design.
-
-## Advantages
-
-- Reduced gradient switching overhead
-- Elimination of unnecessary dead-time
-- Improved acquisition efficiency
-- Faster k-space traversal
-- Reduced overall scan duration
-
-The Optimisation enables significantly faster imaging while remaining within scanner hardware limits.
-
----
-
-# 📊 Results
-
-The optimised implementation demonstrates:
-
-- More than **75% reduction** in acquisition time
-- Stable gradient behavior
-- Hardware-compliant operation
-- Efficient k-space coverage
-- Preservation of FLASH image characteristics
-
----
-
-# 📁 Project Structure
+## Sequence Architecture
 
 ```text
-fast-flash-mri/
-│
-├── images/
-│   └── adc_signals_comparison.png
-│
-├── seq/
-│   ├── flash_extended_trapezoid.py
-│   └── helper_functions.py
-│
-├── documentation/
-│
-├── README.md
-│
-└── results/
+RF Excitation
+      │
+      ▼
+Slice Selection Gradient
+      │
+      ▼
+Phase Encoding Gradient
+      │
+      ▼
+Extended Trapezoid Readout Gradient
+      │
+      ▼
+ADC Sampling
+      │
+      ▼
+RF Spoiling Update
+      │
+      ▼
+Next TR
 ```
 
 ---
 
-# 💻 Getting Started
+## Extended Trapezoid Gradient Concept
 
-## Clone the Repository
+Traditional FLASH sequences contain short inactive periods between gradient transitions.
+
+### Conventional Readout
+
+```text
+      /¯¯¯¯¯\
+_____/       \_____
+```
+
+### Extended Trapezoid Readout
+
+```text
+      /¯¯¯¯¯¯¯¯¯¯¯\
+_____/             \_____
+```
+
+Benefits:
+
+- Reduced dead-time
+- Improved gradient duty cycle
+- Faster k-space traversal
+- Shorter repetition period
+
+---
+
+## FLASH Sequence Fundamentals
+
+FLASH is a Gradient Recalled Echo (GRE) sequence that combines:
+
+- Low flip-angle RF excitations
+- Gradient echo formation
+- RF spoiling
+- Short TR and TE
+
+### Advantages
+
+✅ Fast acquisition
+
+✅ Low SAR
+
+✅ Flexible image contrast
+
+✅ Excellent for dynamic studies
+
+### Limitations
+
+⚠ Lower SNR compared with spin-echo methods
+
+⚠ Sensitive to magnetic field inhomogeneity
+
+⚠ Susceptibility-related artifacts
+
+---
+
+# Tissue Contrast Configurations
+
+## Proton Density Weighted
+
+| Parameter | Setting |
+|------------|----------|
+| Flip Angle | Small |
+| TR | Long |
+| TE | Short |
+
+---
+
+## T1 Weighted
+
+| Parameter | Setting |
+|------------|----------|
+| Flip Angle | Large (~70°) |
+| TR | Short |
+| TE | Short |
+
+---
+
+## T2* Weighted
+
+| Parameter | Setting |
+|------------|----------|
+| Flip Angle | Small |
+| TR | Longer |
+| TE | Long |
+
+---
+
+# Clinical Applications
+
+### Magnetic Resonance Angiography (MRA)
+
+- Non-invasive vascular imaging
+- Arterial visualisation
+- Venous assessment
+
+### Dynamic Contrast Enhanced MRI
+
+- Contrast uptake monitoring
+- Tumour characterisation
+- Pharmacokinetic analysis
+
+### Perfusion Imaging
+
+- Tissue blood flow evaluation
+- Cerebral perfusion studies
+- Oncology applications
+
+### Abdominal MRI
+
+- Rapid breath-hold imaging
+- Motion reduction
+- Improved patient comfort
+
+---
+
+# Technical Specifications
+
+| Parameter | Value |
+|------------|---------|
+| Field of View | 220 mm × 220 mm |
+| Slice Thickness | 8.0 mm |
+| Acquisition Matrix | 32 × 32 |
+| Reconstructed Matrix | 64 × 64 |
+| Readout Samples | 64 |
+| Phase Encoding Steps | 64 |
+| Flip Angle | 5° |
+| RF Spoiling Increment | 117° |
+| Maximum Gradient | 28 mT/m |
+| Maximum Slew Rate | 150 T/m/s |
+
+---
+
+# Repository Structure
+
+```text
+fast-flash-mri/
+│
+├── README.md
+├── seq/
+│   ├── fast_flash.seq
+│   └── conventional_flash.seq
+│
+├── scripts/
+│   ├── create_sequence.py
+│   ├── reconstruction.py
+│   └── analysis.py
+│
+├── images/
+│   ├── adc_signals_comparison.png
+│   ├── gradient_waveforms.png
+│   ├── sequence_timeline.png
+│   └── reconstructed_image.png
+│
+└── docs/
+    └── project_report.pdf
+```
+
+---
+
+# Installation
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/fast-flash-mri.git
 cd fast-flash-mri
 ```
 
-## Install Dependencies
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Run the Sequence
+---
+
+# Usage
+
+Generate the sequence:
 
 ```bash
-python flash_extended_trapezoid.py
+python create_sequence.py
+```
+
+Run reconstruction:
+
+```bash
+python reconstruction.py
+```
+
+Analyse timing performance:
+
+```bash
+python analysis.py
 ```
 
 ---
 
-# 🎓 Research Contributions
+# Example Results
 
-This work demonstrates that substantial reductions in FLASH acquisition time can be achieved through gradient waveform Optimisation without exceeding scanner hardware constraints.
+## Gradient Waveforms
 
-### Contributions
+- Slice-selection gradient
+- Phase-encoding gradient
+- Extended trapezoid readout gradient
 
-- Design of an Extended Trapezoid Readout Gradient
-- Elimination of Gradient Dead-Time
-- Hardware-Constrained Optimisation
-- High-Speed FLASH MRI Implementation
-- Experimental Validation of Acquisition-Time Reduction
+## ADC Timing
 
----
+Comparison of:
 
-# 📌 Highlights
+- Standard FLASH acquisition
+- Optimised FLASH acquisition
 
-✅ FLASH MRI Sequence Implementation  
-✅ Extended Trapezoid Gradient Design  
-✅ RF Spoiling Support  
-✅ Hardware-Constrained Optimisation  
-✅ GRE-Based Imaging  
-✅ >75% Reduction in Acquisition Time  
-✅ Research-Oriented Open Implementation
+## Image Reconstruction
+
+- k-space generation
+- Fourier reconstruction
+- Image quality evaluation
 
 ---
 
-# 📄 License
+# Future Improvements
 
-This project is intended for academic and research purposes.
-
-If this work contributes to your research, please consider citing the repository.
+- Parallel imaging support (GRAPPA/SENSE)
+- Compressed sensing integration
+- Multi-slice FLASH
+- 3D FLASH implementation
+- GPU-accelerated reconstruction
+- Real-time imaging framework
 
 ---
 
-# 👨‍💻 Author
+# Research Contribution
 
-**Mohit Makvana**  
-M.Sc. Computational Engineering  
-Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU)
+This work demonstrates that intelligent gradient waveform engineering can dramatically reduce acquisition time in FLASH imaging. The proposed extended trapezoid readout strategy improves temporal efficiency while preserving compatibility with standard MRI hardware constraints.
 
-Research Interests:
+---
 
-- Magnetic Resonance Imaging (MRI)
-- Pulse Sequence Development
-- Fast Imaging Techniques
-- Medical Image Reconstruction
-- Deep Learning for Medical Imaging
-````
+# Acknowledgements
+
+This project was developed as part of MRI sequence design and optimisation research at Technische Fakultät.
+
+Special thanks to the Pulseq development community for providing an open framework for MRI sequence prototyping.
+
+---
+
+# License
+
+This project is released under the MIT License.
+
+```text
+MIT License
+
+Copyright (c) 2024 Mohit Makvana
+
+Permission is hereby granted, free of charge,
+to any person obtaining a copy of this software
+and associated documentation files.
+```
+
+---
+
+## Contact
+
+**Mohit Makvana**
+
+📧 Email: your-email@example.com
+
+🔗 LinkedIn: https://linkedin.com/in/your-profile
+
+🔗 GitHub: https://github.com/your-username

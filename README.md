@@ -82,11 +82,12 @@ _____/       \_____
 ```
 
 ### Extended Trapezoid Readout
-
+```text
             /¯¯¯\
     /¯¯¯¯¯¯¯     \
 ___/               \___
-                  
+
+```               
 
 Benefits:
 
